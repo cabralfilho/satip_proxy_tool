@@ -1,0 +1,28 @@
+{
+  "name": "proxy-satip",
+  "description": "A proxy for satip protocol",
+  "version": "0.0.1",
+  "author": "Jordi Font <jfont555@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": " "
+  },
+  "dependencies":{
+    "verbal-expressions": "0.1.2",
+    "udp-proxy": "1.0.1",
+    "node-ssdp": "2.0.1",
+    "collections": "1.2.1",
+    "winston": "0.9.0",
+    "stdio":"0.2.7",
+    "xmlbuilder":"2.6.2",
+    "fs":"0.0.2",
+    "node-simple-router":"0.9.0"
+  },
+  "licences":[
+    {
+      "type": "",
+      "url": " "
+    }
+  ]
+}
+

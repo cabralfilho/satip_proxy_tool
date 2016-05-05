@@ -1,0 +1,164 @@
+{"frequencies": [
+
+  {"from":"10758",
+      "freq": "474",
+      "type": "DVB-T"
+    },
+  {"from":"10788",
+      "freq": "482",
+    "type": "DVB-T"
+    },
+  {"from":"10802",
+      "freq": "490",
+    "type": "DVB-T"
+    },
+  {"from":"10842",
+      "freq": "498",
+    "type": "DVB-T"
+    },
+  {"from":"10862",
+      "freq": "570",
+    "type": "DVB-T"
+    },
+  {"from":"11475",
+      "freq": "514",
+    "type": "DVB-T"
+    },
+  {"from":"11515",
+      "freq": "522",
+    "type": "DVB-T"
+    },
+  {"from":"11555",
+      "freq": "530",
+    "type": "DVB-T"
+    },
+  {"from":"11592",
+      "freq": "538",
+    "type": "DVB-T"
+    },
+  {"from":"11595",
+      "freq": "546",
+    "type": "DVB-T"
+    },
+  {"from":"11635",
+      "freq": "554",
+    "type": "DVB-T"
+    },
+  {"from":"11675",
+      "freq": "562",
+    "type": "DVB-T"
+    },
+  {"from":"11719",
+      "freq": "570",
+    "type": "DVB-T"
+    },
+  {"from":"11739",
+      "freq": "578",
+    "type": "DVB-T"
+    },
+  {"from":"11778",
+      "freq": "586",
+    "type": "DVB-T"
+    },
+  {"from":"11798",
+      "freq": "594",
+    "type": "DVB-T"
+    },
+  {"from":"11817",
+      "freq": "602",
+    "type": "DVB-T"
+    },
+  {"from":"11836",
+      "freq": "610",
+    "type": "DVB-T"
+    },
+  {"from":"11856",
+      "freq": "618",
+    "type": "DVB-T"
+    },
+  {"from":"11875",
+      "freq": "626",
+    "type": "DVB-T"
+    },
+  {"from":"11914",
+      "freq": "634",
+    "type": "DVB-T"
+    },
+  {"from":"11992",
+      "freq": "642",
+    "type": "DVB-T"
+    },
+  {"from":"12012",
+      "freq": "650",
+    "type": "DVB-T"
+    },
+  {"from":"12032",
+      "freq": "658",
+    "type": "DVB-T"
+    },
+  {"from":"12070",
+      "freq": "666",
+    "type": "DVB-T"
+    },
+  {"from":"12109",
+      "freq": "674",
+    "type": "DVB-T"
+    },
+  {"from":"12525",
+      "freq": "682",
+    "type": "DVB-T"
+    },
+  {"from":"12565",
+      "freq": "690",
+    "type": "DVB-T"
+    },
+  {"from":"12605",
+      "freq": "698",
+    "type": "DVB-T"
+    },
+  {"from":"12630",
+      "freq": "706",
+    "type": "DVB-T"
+    },
+  {"from":"12631",
+      "freq": "714",
+    "type": "DVB-T"
+    },
+  {"from":"12636",
+      "freq": "722",
+    "type": "DVB-T"
+    },
+  {"from":"12641",
+      "freq": "730",
+    "type": "DVB-T"
+    },
+  {"from":"12644",
+      "freq": "738",
+    "type": "DVB-T"
+    },
+  {"from":"12649",
+      "freq": "746",
+    "type": "DVB-T"
+    },
+  {"from":"12661",
+      "freq": "754",
+    "type": "DVB-T"
+    },
+  {"from":"12685",
+      "freq": "762",
+    "type": "DVB-T"
+    },
+  {"from":"12696",
+      "freq": "770",
+    "type": "DVB-T"
+    },
+  {"from":"12711",
+      "freq": "778",
+    "type": "DVB-T"
+    },
+  {"from":"12725",
+      "freq": "786",
+    "type": "DVB-T"
+    }]
+
+}
