@@ -3,7 +3,7 @@ var Router = require('node-simple-router');
 
 exports.iniciarHttp = function (path) { //incluir path ruta variable
 
-    var router = Router({static_route: path || __dirname +"/http-docs/SAT2IP"});
+    var router = Router({static_route: path || __dirname +"/"});
     var server = http.createServer(router);
     server.listen('49152');
 
