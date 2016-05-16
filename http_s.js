@@ -1,5 +1,5 @@
 var http = require('http');
-var Router = require('simple-router');
+var Router = require('node-simple-router');
 
 exports.iniciarHttp = function (path) { //incluir path ruta variable
 
