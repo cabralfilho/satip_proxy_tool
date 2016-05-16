@@ -85,6 +85,11 @@ var options = stdio.getopt({
         key: 'V',
         description: 'Enable Verbose',
         args: 0
+    },
+    'Macintosh':{
+        key: 'z',
+        description: 'Special treatment in IP. Must be checked to execute in a Macintosh',
+        args: 0
     }
 
 });
