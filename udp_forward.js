@@ -49,12 +49,11 @@ var UdProxy = function(toAddress, toPort, localPort) {
 
 // 'proxyClose' is emitted when the socket closes (from a timeout) without new messages
     server.on('proxyClose', function (peer) {
-        console.log('Disconnecting socket from ' + peer.address);
+        logger.debug({timestamp: Date.now()},'Disconnecting socket from ' + peer.address);
     });
 
     server.on('proxyError', function (err) {
         console.log('ProxyError! ' + err);
-        this.close();
         logger.debug({timestamp: Date.now()}, 'ProxyError! ' + err);
     });
 

@@ -17,12 +17,6 @@ regularExp.prototype.isOptions= function (data){
     var optionsRtsp = /OPTIONS rtsp/;
     return (data.toString().match(optionsRtsp));
 };
-
-regularExp.prototype.isCseq = function (data){
-    var seqCheck = /CSeq: 1\r/;
-    return (data.toString().match(seqCheck));
-};
-
 regularExp.prototype.isSetup = function (data){
     var setupCheck = /SETUP rtsp/;
     return (data.toString().match(setupCheck));
@@ -61,7 +55,6 @@ regularExp.prototype.Src = function (data){
 };
 regularExp.prototype.SessionCheck = function (data){
     var sessionCheck = /Session: \w*/i;
-        console.log("\nNUM SESSIO"+data.toString().match(sessionCheck));
         return (data.toString().match(sessionCheck));
 };
 
@@ -79,7 +72,6 @@ regularExp.prototype.individualPorts = function (data,cb){
 
 regularExp.prototype.pids = function (data){
     var pids = /pids=\d*(\w*\d)*/
-    //Falla segur en mes de un pid
     var pidds = data.toString().match(pids);
     return pidds;
 };

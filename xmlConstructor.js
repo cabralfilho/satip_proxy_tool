@@ -1,13 +1,9 @@
-var httpserver = require('./http_s.js');
-var stdio = require('stdio');
+var generalFunctions = require('./general_functions.js');
 var fs = require('fs');
 var configuration = require('./config_rtsp.json');
-
-
 var builder = require('xmlbuilder').create('root');
-var parameterConflictive1 = "satip:X_SATIPCAP xmlns:satip=";
+
 var initializer = function(config) {
-    console.log(config.uuid);
 
     var proxyPort = configuration.localproxy.serverPort; // Port on es connecta el client SAT>IP
 
@@ -23,19 +19,9 @@ var initializer = function(config) {
             modelNumber: config.modelNumber ||"0.0.0.1",
             serialNumber: config.serialNumber ||"PCSATIP-1JFVSAT",
             UDN: "uuid:"+config.uuid,// Generate and return a RFC4122 v1 (timestamp-based)
-            presentationURL: "http://"+httpserver.getIPAddress()+":"+ proxyPort
-
-    //UPC: config.UPC ||"Psat",
-            //"satip": "urn:ses-com:satip>DVBT-1",
-            //a: config.satipX_SATIPCAP ||"DVBT-1,DVBS-2", // ERROR EN EL DOCUMENT HA DE SER: "satip:X_SATIPCAP", falten els ":"
-            //DiscoviServiceDescriptionURL: config.path ||"/DeviceDesc.xml"
+            presentationURL: "http://"+generalFunctions.myIP()+":"+ proxyPort
         }
     };
-    //defaults[auxString] = config.satipX_SATIPCAP ||"DVBT-1,DVBS-2";
-    //delete defaults['a'];
-
-
-
     var Xml1 = {
         specVersion: {
             major: 1,
@@ -53,17 +39,12 @@ var initializer = function(config) {
             if (error) {
                 console.log(error);
             } else {
-                console.log("The file was saved!");
+                console.log("XML Created");
             }
         }
     );
 }
-
 exports.initialize = function(options) {
     return new initializer(options);
 }
-
-
-//console.log(options);
-
 

@@ -1,25 +1,24 @@
 /**
  * Created by jfont on 15/09/15.
  */
-
-var os = require('os');
 var uuid = require('uuid');
 
 // ############### Obtain IP ###############
 
-exports.myIP = function (cb) {
-    var interfaces = os.networkInterfaces();
-    var addresses = [];
-    for (var k in interfaces) {
-        for (var k2 in interfaces[k]) {
-            var address = interfaces[k][k2];
-            if (address.family === 'IPv4' && !address.internal) {
-                addresses.push(address.address);
-            }
+exports.myIP = function() {
+    var interfaces = require('os').networkInterfaces();
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal)
+                return alias.address;
         }
     }
-    cb(addresses.toString())
-};
+
+    return '0.0.0.0';
+}
 
 // ############### Obtain a time based UUID ###############
 

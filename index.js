@@ -80,17 +80,18 @@ var options = stdio.getopt({
         key: 'x',
         description: 'Especificar satipX_SATIPCAP al XML',
         args: 1
+    },
+    'verbose': {
+        key: 'V',
+        description: 'Enable Verbose',
+        args: 0
     }
-
-
 
 });
 
-
 GeneralFunctions.uuidGenerator( function (uuidP) {
-    GeneralFunctions.myIP(function(myIP) {
 
-        options.myIP = myIP;
+        options.myIP = GeneralFunctions.myIP();
         options.uuid = uuidP;
 
         xmlConstructor.initialize(options);
@@ -99,8 +100,8 @@ GeneralFunctions.uuidGenerator( function (uuidP) {
 
         ssdpDiscovery.createSsdp(options);
 
-        FinalProxy.CreateProxySatIP();
-    });
+        FinalProxy.CreateProxySatIP(options);
+
 });
 
 

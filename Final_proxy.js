@@ -1,7 +1,6 @@
 /**
  * Created by jordi on 12/04/15.
  */
-var util = require('util');
 var net = require('net');
 var VerEx = require('verbal-expressions');
 var config = require('./config_rtsp.json');
@@ -10,52 +9,54 @@ var logger = require('./logger.js');
 var messages = require('./messages_lib.js');
 var mapping = require('./mapping.js');
 var regularUtils = require('./regularExpforProxy.js').regularExp;
-var myIp = require('./http_s.js');
 var GeneralFunctions = require('./general_functions.js');
-
 
 
 var proxyPort = config.localproxy.serverPort; // Port on es connecta el client SAT>IP
 var serviceHost = config.Server.externServer; // Adreça servidor SAT>IP extern
 var servicePort = config.Server.externPort; // Port Servidor Sat>IP extern
-var proxy = myIp.getIPAddress(); //Adreça proxy sat>ip
+var proxy = GeneralFunctions.myIP(); //Adreça proxy sat>ip
 
 var minPort = config.localproxy.minPort;
 var maxPort = config.localproxy.maxPort;
-
-console.log(proxyPort + " " + serviceHost + " " + servicePort + " " + proxy);
 
 console.log("\nInit SAT>IP RTSP-Server Proxy\n\n\n");
 logger.debug({timestamp: Date.now()}, "Init SAT>IP RTSP-Server Proxy");
 
 var portsUsed = {};
 var availablePorts = [];
-for(var i=parseInt(minPort); i<parseInt(maxPort); i=i+2){
+for (var i = parseInt(minPort); i < parseInt(maxPort); i = i + 2) {
     availablePorts.push(i);
 }
 
-var ProxySatIP = function () {
+var ProxySatIP = function (initOptions) {
     net.createServer(function (proxySocket) {
             var proxyClientID = undefined;
             var serviceSocket = new net.Socket();
             serviceSocket.connect(parseInt(servicePort), serviceHost, function () {
-                //logger.debug({timestamp: Date.now()}, ' New connection to proxy: ' + proxySocket.getRemoteAddress());
-                GeneralFunctions.uuidGenerator(function (proxySessID){
-                    proxyClientID= proxySessID;
-                    console.log("\nProxy_id: "+proxyClientID);
+                logger.debug({timestamp: Date.now()}, ' New connection to proxy: ' + proxySocket.remoteAddress.toString().slice(7));
+                GeneralFunctions.uuidGenerator(function (proxySessID) {
+                    proxyClientID = proxySessID;
+                    if (initOptions.verbose) {
+                        console.log("Proxy_id: " + proxyClientID+"\n");
+                    }
+                    logger.debug({timestamp: Date.now()}, "Proxy_id: " + proxyClientID);
                 });
             });
 
             var session = undefined;
 
             proxySocket.on("data", function (data) {
-                console.log(data.toString());
                 if (regularUtils.isRTSP(data) !== null) {
                     var ActualMessageSession = regularUtils.SessionCheck(data);
                     var freqacanviar = undefined;
 
                     if (ActualMessageSession !== null && session === undefined) {
                         session = ActualMessageSession;
+                        if (initOptions.verbose) {
+                            console.log(session +"\n");
+                        }
+                        logger.debug({timestamp: Date.now()}, session);
                     }
 
                     if ((regularUtils.isSetup(data) !== null)) {
@@ -63,7 +64,7 @@ var ProxySatIP = function () {
 
                             mapping.toFreq(((regularUtils.Freq(data)).toString().slice(5)), function (freqCanviada) {
 
-                                if(freqCanviada !== undefined) {
+                                if (freqCanviada !== undefined) {
                                     freqacanviar = freqCanviada;
 
                                     //Si és el primer SETUP, assignem sessió
@@ -73,7 +74,7 @@ var ProxySatIP = function () {
                                         //TO BE implemented if necessary
                                     }
                                     regularUtils.individualPorts(data, function (port) {
-                                        if(portsUsed[proxyClientID] !== undefined){
+                                        if (portsUsed[proxyClientID] !== undefined) {
                                             //availablePorts.push(portsUsed[proxyClientID]);
                                             //delete portsUsed[proxyClientID];
                                         }
@@ -82,7 +83,7 @@ var ProxySatIP = function () {
 
                                         if (freqacanviar.type == "DVB-T") { //SETUP pel cas DVB-T
 
-                                            var auxClientPorts = "client_port="+portsUsed[proxyClientID]+"-"+(portsUsed[proxyClientID]+1);
+                                            var auxClientPorts = "client_port=" + portsUsed[proxyClientID] + "-" + (portsUsed[proxyClientID] + 1);
 
                                             var options = {
                                                 serverAddress: serviceHost,
@@ -95,12 +96,15 @@ var ProxySatIP = function () {
 
                                             //logger.debug({timestamp: Date.now()}, 'ServiceSocket connect to server: ' + freqacanviar.freq[5]);
                                             messages.setupMessageDVBT(options, function (setupMessDVBT) {//FALTA reservar ports server per udp, Iniciar udp amb client
-                                                console.log("SETUP MESS" + setupMessDVBT);
+                                                logger.debug({timestamp: Date.now()}, "SETUP MESS:" + setupMessDVBT);
+                                                if (initOptions.verbose) {
+                                                    console.log("SETUP MESS:\n" + setupMessDVBT);
+                                                }
                                                 serviceSocket.write(setupMessDVBT);
                                             });
                                         }
                                         else if (freqacanviar.type == "DVB-S") {//SETUP pel cas DVB-S
-                                            var auxClientPorts = "client_port="+portsUsed[proxyClientID]+"-"+(portsUsed[proxyClientID]+1);
+                                            var auxClientPorts = "client_port=" + portsUsed[proxyClientID] + "-" + (portsUsed[proxyClientID] + 1);
 
                                             var options = {
                                                 serverAddress: serviceHost,
@@ -116,7 +120,10 @@ var ProxySatIP = function () {
 
                                             logger.debug({timestamp: Date.now()}, 'ServiceSocket connect to server: ' + freqacanviar.freq[5]);
                                             messages.setupMessageDVBS(options, function (setupMessDVBS) {//FALTA reservar ports server per udp, Iniciar udp amb client
-                                                console.log("SETUP MESS" + setupMessDVBS);
+                                                logger.debug({timestamp: Date.now()}, "SETUP MESS:" + setupMessDVBS);
+                                                if (initOptions.verbose) {
+                                                    console.log("SETUP MESS:\n" + setupMessDVBS);
+                                                }
                                                 serviceSocket.write(setupMessDVBS);
                                             });
 
@@ -124,29 +131,35 @@ var ProxySatIP = function () {
                                         }//Cas per no DVB-S i no DVB-T TO BE implemented
 
                                         if (session === undefined) { // Si ja tenim sessió ja tenim proxy udp de ports
-                                            console.log("\nPORT OPEN proxy \n")
-                                            logger.debug({timestamp: Date.now()}, 'Iniciant UDP-Proxy per client' + proxySocket.remoteAddress + 'ports: ' + port[0] + '-' + port[1]);
+                                            logger.debug({timestamp: Date.now()}, 'Iniciant UDP-Proxy per client' + proxySocket.remoteAddress.toString().slice(7) + 'ports: ' + port[0] + '-' + port[1]);
+                                            if (initOptions.verbose) {
+                                                console.log("Iniciant UDP-Proxy per client:\n" + proxySocket.remoteAddress.toString().slice(7) + 'ports: ' + port[0] + '-' + port[1]);
+                                                console.log("\n Remaining unused proxy Ports = "+availablePorts.length)
+                                            }
                                             udpf.createUdpforward(proxySocket.remoteAddress.toString().slice(7), port[0], portsUsed[proxyClientID]);//Modificar ports a els reservats pel servidor
-                                            udpf.createUdpforward(proxySocket.remoteAddress.toString().slice(7), port[1], (portsUsed[proxyClientID]+1));
+                                            udpf.createUdpforward(proxySocket.remoteAddress.toString().slice(7), port[1], (portsUsed[proxyClientID] + 1));
                                         }
                                     });
                                 }
                                 // Si la freq no està a la llista de traduccions, i és el primer SETUP, el proxy retorna automàticament Not found
-                                else{
+                                else {
                                     var options = {
                                         nSeq: regularUtils.SeqNum(data).toString().slice(6)
                                     }
-                                    messages.freqNotFound(options,function (notFoundMessage){
-                                       proxySocket.write(notFoundMessage);
-                                        console.log("NOT FOUND:\n"+notFoundMessage);
+                                    messages.freqNotFound(options, function (notFoundMessage) {
+                                        proxySocket.write(notFoundMessage);
+                                        logger.debug({timestamp: Date.now()}, "NOT FOUND:" + notFoundMessage);
+                                        if (initOptions.verbose) {
+                                            console.log("NOT FOUND:\n" + notFoundMessage);
+                                        }
                                     });
                                 }
 
                             });
-                        }else{
+                        } else {
                             mapping.toFreq(((regularUtils.Freq(data)).toString().slice(5)), function (freqCanviada) {
 
-                                if(freqCanviada !== undefined) {
+                                if (freqCanviada !== undefined) {
                                     freqacanviar = freqCanviada;
 
                                     if (freqacanviar.type == "DVB-T") { //SETUP pel cas DVB-T
@@ -160,7 +173,10 @@ var ProxySatIP = function () {
                                         };
 
                                         messages.setupMessageDVBT(options, function (setupMessDVBT) {
-                                            console.log("SETUP MESS" + setupMessDVBT);
+                                            logger.debug({timestamp: Date.now()}, "SETUP Message without freq:" + setupMessDVBT);
+                                            if (initOptions.verbose) {
+                                                console.log("SETUP Message without freq:\n" + setupMessDVBT);
+                                            }
                                             serviceSocket.write(setupMessDVBT);
                                         });
                                     }
@@ -177,10 +193,13 @@ var ProxySatIP = function () {
                                             sr: freqacanviar.sr
                                         };
                                         messages.setupMessageDVBS(options, function (setupMessDVBS) {
-                                            console.log("SETUP MESS" + setupMessDVBS);
+                                            logger.debug({timestamp: Date.now()}, "SETUP Message without freq:" + setupMessDVBS);
+                                            if (initOptions.verbose) {
+                                                console.log("SETUP Message without freq:\n" + setupMessDVBS);
+                                            }
                                             serviceSocket.write(setupMessDVBS);
                                         });
-                                    }else {
+                                    } else {
                                     }//Cas per no DVB-S i no DVB-T TO BE implemented
                                 }
 
@@ -190,13 +209,12 @@ var ProxySatIP = function () {
                     else if (regularUtils.isPlay(data) !== null) {
 
                         if (regularUtils.Freq(data) !== null) { // Ens passen una freq al PLAY
-                            console.log("PLAY\n ");
                             if (regularUtils.isDvbt(data) === null) {// cas de dvbs Es comproba diferent ja que la comanda es realitza en la mateixa sessió!
                                 mapping.toFreq(((regularUtils.Freq(data)).toString().slice(5)), function (freqCanviada) {
 
-                                    if(freqCanviada !== undefined) {
+                                    if (freqCanviada !== undefined) {
                                         freqacanviar = freqCanviada;
-                                    }else{
+                                    } else {
                                         freqacanviar = {
                                             freq: 0000
                                         }
@@ -204,36 +222,39 @@ var ProxySatIP = function () {
 
                                     var options = {
                                         serverAddress: serviceHost,
-                                        freq: freqacanviar.freq,//.toString().slice(5),
-                                        stream: regularUtils.Stream(data),//.toString().slice(7),
-                                        source: regularUtils.Src(data),//.toString().slice(4),
-                                        nSeq: regularUtils.SeqNum(data),//.toString().slice(6),
-                                        session: ActualMessageSession//s.toString().slice(9)
+                                        freq: freqacanviar.freq,
+                                        stream: regularUtils.Stream(data),
+                                        source: regularUtils.Src(data),
+                                        nSeq: regularUtils.SeqNum(data),
+                                        session: ActualMessageSession
                                     };
-                                    messages.playMessageDVBT(options, function (playMess) {
-                                        console.log(options);
-                                        console.log("\n" + playMess);
-                                        serviceSocket.write(playMess);
+                                    messages.playMessageDVBT(options, function (playMessDVBT) {
+                                        logger.debug({timestamp: Date.now()}, "Play Message DVB-T:" + playMessDVBT);
+                                        if (initOptions.verbose) {
+                                            console.log("Play Message DVB-T:\n" + playMessDVBT);
+                                        }
+                                        serviceSocket.write(playMessDVBT);
                                     });
                                 });
                             }
                             else { // Cas dvbt
                                 mapping.toFreq(((regularUtils.Freq(data)).toString().slice(5)), function (freqCanviada) {
-                                    if(freqCanviada !== undefined) {
+                                    if (freqCanviada !== undefined) {
                                         freqacanviar = freqCanviada;
-                                    }else{
+                                    } else {
                                         freqacanviar = {
                                             freq: 0000,
                                             fec: '89',
                                             pol: 'h',
                                             sr: '22000'
                                         }
-                                    }                                    var options = {
+                                    }
+                                    var options = {
                                         serverAddress: serviceHost,
                                         freq: freqacanviar.freq,
                                         pids: regularUtils.pids(data).toString(),
                                         session: ActualMessageSession,
-                                        stream: regularUtils.Stream(data),//.toString().slice(7),
+                                        stream: regularUtils.Stream(data),
                                         source: regularUtils.Src(data),
                                         nSeq: regularUtils.SeqNum(data).toString().slice(6),
                                         fec: freqacanviar.fec,
@@ -241,9 +262,12 @@ var ProxySatIP = function () {
                                         sr: freqacanviar.sr
                                     };
 
-                                    messages.playMessageDVBS(options, function (setupMessDVBS) {//FALTA reservar ports server per udp, Iniciar udp amb client
-                                        console.log("SETUP MESS" + setupMessDVBS);
-                                        serviceSocket.write(setupMessDVBS);
+                                    messages.playMessageDVBS(options, function (playMessDVBS) {//FALTA reservar ports server per udp, Iniciar udp amb client
+                                        logger.debug({timestamp: Date.now()}, "PLAY Message DVB-S:" + playMessDVBS);
+                                        if (initOptions.verbose) {
+                                            console.log("PLAY Message DVB-S:\n" + playMessDVBS);
+                                        }
+                                        serviceSocket.write(playMessDVBS);
                                     });
                                 });
                             }
@@ -252,7 +276,11 @@ var ProxySatIP = function () {
                             //canmbiem la IP i PORT del missatge PLAY simple (Addpids/Delpids)
                             var changeipPlay = VerEx().find(proxy).replace(data, serviceHost);
                             changeipPlay = VerEx().find(proxyPort).replace(changeipPlay, servicePort);
-                            console.log("\nMESSAGE PLAY\n" + changeipPlay);
+                            logger.debug({timestamp: Date.now()}, "PLAY Message (Only Change IP):" + changeipPlay);
+                            if (initOptions.verbose) {
+                                console.log("PLAY Message (Only Change IP):\n" + changeipPlay);
+                            }
+
                             serviceSocket.write(changeipPlay);
                         }
                     }
@@ -261,24 +289,37 @@ var ProxySatIP = function () {
                         var changeipTeardown = VerEx().find(proxy).replace(data, serviceHost);
                         changeipTeardown = VerEx().find(proxyPort).replace(changeipTeardown, servicePort);
                         serviceSocket.write(changeipTeardown);
+                        logger.debug({timestamp: Date.now()}, "TEARDOWN Message (Only Change IP):" + changeipTeardown);
+                        if (initOptions.verbose) {
+                            console.log("TEARDOWN Message (Only Change IP):\n" + changeipTeardown);
+                        }
+
                         //availablePorts.push(portsUsed[proxyClientID]);
                         //delete portsUsed[proxyClientID];
                     }
-                    //canmbiem Tornem a escriure el missatge PLAY degut a errors amb alguns Servidors (TVH)
+                    //Tornem a escriure el missatge PLAY degut a errors amb alguns Servidors (TVH)
                     else if (regularUtils.isOptions(data) !== null) {
                         var options = {
                             serverAddress: serviceHost,
-                            nSeq: regularUtils.SeqNum(data),//.toString().slice(6),
-                            session: ActualMessageSession//s.toString().slice(9)
+                            nSeq: regularUtils.SeqNum(data),
+                            session: ActualMessageSession
                         }
                         messages.optionsMessage(options, function (message) {
                             serviceSocket.write(message);
-                            console.log("OPTIONS MODIFIED:\n"+message)
+                            logger.debug({timestamp: Date.now()}, "OPTIONS Message:" + message);
+                            if (initOptions.verbose) {
+                                console.log("OPTIONS Message:\n" + message);
+                            }
+
                         });
                     }
                 }
                 else if (regularUtils.isHTTP(data) !== null) {
-                    console.log("HTTP requests not implemented!!!")
+                    logger.debug({timestamp: Date.now()}, "HTTP requests not implemented!!!" + data);
+                    if (initOptions.verbose) {
+                        console.log("\nHTTP requests not implemented!!!\n" + data);
+                    }
+
                 }
                 else {
                     proxySocket.end();
@@ -289,10 +330,12 @@ var ProxySatIP = function () {
 
             serviceSocket.on("data", function (data) {
                 //canmbiem la IP i PORT dels missatges de resposta del Servidor
-                console.log("PROXYS " + data.toString());
                 var changeipOptions = VerEx().find(proxy).replace(data, proxySocket.remoteAddress.toString());
                 changeipOptions = VerEx().find(serviceHost).replace(changeipOptions, proxy);
-                console.log("PROX MODIFIED " + changeipOptions.toString());
+                logger.debug({timestamp: Date.now()}, "Response Message from server (Only change IP):" + changeipOptions.toString());
+                if (initOptions.verbose) {
+                    console.log("Response Message from server (Only change IP):\n" + changeipOptions.toString());
+                }
 
                 proxySocket.write(changeipOptions);
             });
@@ -300,6 +343,11 @@ var ProxySatIP = function () {
 
             proxySocket.on("error", function (e) {
                 serviceSocket.end();
+                logger.debug({timestamp: Date.now()}, "Error Client Connection" + e);
+                if (initOptions.verbose) {
+                    console.log("\nError Client Connection\n" + e);
+                }
+
                 //availablePorts.push(portsUsed[proxyClientID]);
                 //delete portsUsed[proxyClientID];
             });
@@ -307,14 +355,25 @@ var ProxySatIP = function () {
                 console.log("Could not connect to service at host "
                 + serviceHost + ', port ' + servicePort);
                 proxySocket.end();
+                logger.debug({timestamp: Date.now()}, "Error Server Connection" + e);
+                if (initOptions.verbose) {
+                    console.log("\nError Server Connection\n" + e);
+                }
+
+
             });
 
             proxySocket.on("close", function (had_error) {
                 serviceSocket.end();
-                if(portsUsed[proxyClientID] !== undefined) {
+                if (portsUsed[proxyClientID] !== undefined) {
                     //availablePorts.push(portsUsed[proxyClientID]);
                     //delete portsUsed[proxyClientID];
                 }
+                logger.debug({timestamp: Date.now()}, "Client Connection closed " + had_error);
+                if (initOptions.verbose) {
+                    console.log("\nClient Connection closed" +" Error?= " +had_error);
+                }
+
             });
             serviceSocket.on("close", function (had_error) {
                 proxySocket.end();
@@ -324,6 +383,6 @@ var ProxySatIP = function () {
     ).listen(proxyPort)
 //}
 }
-exports.CreateProxySatIP = function () {
-    return new ProxySatIP();
+exports.CreateProxySatIP = function (options) {
+    return new ProxySatIP(options);
 };
