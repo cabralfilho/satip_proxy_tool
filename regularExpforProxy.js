@@ -60,7 +60,7 @@ regularExp.prototype.Src = function (data){
     return (data.toString().match(checkSrc));
 };
 regularExp.prototype.SessionCheck = function (data){
-    var sessionCheck = /Session: \d*/;
+    var sessionCheck = /Session: \w*/i;
         console.log("\nNUM SESSIO"+data.toString().match(sessionCheck));
         return (data.toString().match(sessionCheck));
 };

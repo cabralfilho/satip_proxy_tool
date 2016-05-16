@@ -2,7 +2,7 @@
  * Created by jordi on 30/03/15.
  */
 var configu = require('./config_rtsp.json');
-
+var myIP = require('./http_s.js');
 
 exports.createSsdp = function(options) {
 
@@ -21,14 +21,14 @@ exports.createSsdp = function(options) {
             udn: options.uuid,
             ttl: 120,
 //	description: '"http://schemas.upnp.org/upnp/1/0/"; ns=01',
-            location: 'http://'+options.myIP+':49152/SAT2IP/DeviceDesc.xml'
+            location: 'http://'+myIP.getIPAddress()+':49152/DeviceDesc.xml'
         });
 
     server.addUSN('upnp:rootdevice');
 //    server.addUSN('urn:schemas-upnp-org:device:MediaServer:1');
 //    server.addUSN('urn:schemas-upnp-org:service:ContentDirectory:1');
 //    server.addUSN('urn:schemas-upnp-org:service:ConnectionManager:1');
-    server.addUSN('uuid:'+options.uuid); // Identificador de servidor únic, sisi últims parells MAC de la màquina
+    //server.addUSN('uuid:'+options.uuid); // Identificador de servidor únic, sisi últims parells MAC de la màquina
     server.addUSN('urn:ses-com:device:SatIPServer:1');
 
     //server.addUSN('upnp:rootdevice');

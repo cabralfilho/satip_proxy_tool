@@ -16,7 +16,7 @@ var UdProxy = function(toAddress, toPort, localPort) {
             port: this.toPort,
             localaddress: '0.0.0.0',
             localport: this.localPort,
-            timeOutTime: 1000
+            timeOutTime: 20000
         };
 // This is the function that creates the server, each connection is handled internally
     var server = proxy.createServer(options);
@@ -49,17 +49,19 @@ var UdProxy = function(toAddress, toPort, localPort) {
 
 // 'proxyClose' is emitted when the socket closes (from a timeout) without new messages
     server.on('proxyClose', function (peer) {
-        //console.log('disconnecting socket from ' + peer.address);
+        console.log('Disconnecting socket from ' + peer.address);
     });
 
     server.on('proxyError', function (err) {
         console.log('ProxyError! ' + err);
+        this.close();
         logger.debug({timestamp: Date.now()}, 'ProxyError! ' + err);
     });
 
     server.on('error', function (err) {
         console.log('Error! ' + err);
         logger.debug({timestamp: Date.now()}, 'Error! ' + err);
+
     });
 }
 exports.createUdpforward= function (toAddress, toPort, localPort) {

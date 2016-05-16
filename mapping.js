@@ -21,10 +21,11 @@ exports.toFreq = function (frequ, cb) {// function tested!!
     //console.log("toFreq method: "+JSON.stringify(tofreq));
     var tofreq = [];
     var searchfield = "from";
+
     for(var i= 0; i< maps.frequencies.length ; i++){
         if(maps.frequencies[i][searchfield] == frequ){
             tofreq = maps.frequencies[i];
-            cb(tofreq)
+            return cb(tofreq)
         }
-    }
+    }cb(undefined)
 };
