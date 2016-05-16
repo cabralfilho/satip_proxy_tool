@@ -13,11 +13,11 @@ exports.createSsdp = function(options) {
             adInterval: 20000,
             udn: options.uuid,
             ttl: 120,
-            location: 'http://'+options.myIP+':49152/SAT2IP/DeviceDesc.xml'
+            location: 'http://'+options.myIP+':49152/DeviceDesc.xml'
         });
 
     server.addUSN('upnp:rootdevice');
-    server.addUSN('uuid:'+options.uuid); // Identificador de servidor únic, sisi últims parells MAC de la màquina
+    //server.addUSN('uuid:'+options.uuid); // Identificador de servidor únic, sisi últims parells MAC de la màquina
     server.addUSN('urn:ses-com:device:SatIPServer:1');
 
     server.on('advertise-alive', function (headers) {

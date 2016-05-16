@@ -33,7 +33,7 @@ var initializer = function(config) {
     builder.ele(defaults).ele('satip:X_SATIPCAP', {'xmlns:satip': 'urn:ses-com:satip'}, config.satipX_SATIPCAP ||'DVBT-1,DVBS-2')
         .up().ele('satip:X_SATIPM3U', {'xmlns:satip': 'urn:ses-com:satip'}, '/playlist/satip/channels');
     fs.writeFile(
-        "./http-docs/SAT2IP/DeviceDesc.xml",
+        "./DeviceDesc.xml",
         builder,
         function (error) {
             if (error) {
