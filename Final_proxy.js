@@ -133,14 +133,14 @@ var ProxySatIP = function (initOptions) {
                                         if (session === undefined) { // Si ja tenim sessió ja tenim proxy udp de ports
                                             logger.debug({timestamp: Date.now()}, 'Iniciant UDP-Proxy per client' + proxySocket.remoteAddress.toString().slice(7) + 'ports: ' + port[0] + '-' + port[1]);
                                             if (initOptions.verbose) {
-                                                if(options.Macintosh) {
+                                                if(initOptions.Macintosh) {
                                                     console.log("Iniciant UDP-Proxy per client:\n" + proxySocket.remoteAddress.toString().slice(7) + 'ports: ' + port[0] + '-' + port[1]);
                                                 }else{
                                                     console.log("Iniciant UDP-Proxy per client:\n" + proxySocket.remoteAddress + 'ports: ' + port[0] + '-' + port[1]);
                                                 }
                                                 console.log("\n Remaining unused proxy Ports = "+availablePorts.length)
                                             }
-                                            if(options.Macintosh){
+                                            if(initOptions.Macintosh){
                                             udpf.createUdpforward(proxySocket.remoteAddress.toString().slice(7), port[0], portsUsed[proxyClientID]);//Modificar ports a els reservats pel servidor
                                             udpf.createUdpforward(proxySocket.remoteAddress.toString().slice(7), port[1], (portsUsed[proxyClientID] + 1));}
                                             else{
