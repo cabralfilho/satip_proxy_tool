@@ -1,11 +1,11 @@
 {
   "name": "proxy-satip",
   "description": "A proxy for satip protocol",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Jordi Font <jfont555@gmail.com>",
   "repository": {
     "type": "git",
-    "url": " "
+    "url": "https://github.com/jfont555/satip_proxy_tool"
   },
   "dependencies":{
     "verbal-expressions": "0.1.2",
