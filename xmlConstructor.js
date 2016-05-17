@@ -12,26 +12,24 @@ var initializer = function(config) {
             deviceType: "urn:ses-com:device:SatIPServer:1" ,
             friendlyName: config.friendlyName ||"Sat>IP Proxy ",
             manufacturer: config.manufacturer ||"JFv",
-            manufacturerURL: config.manufacturerURL ||"http://www.alitech.com",
+            manufacturerURL: config.manufacturerURL ||"http://www.github.com/jfont555/satip_proxy_tool",
             modelDescription: config.modelDescription ||"Sat>IP proxy",
-            modelURL: config.modelURL ||"http://www.alitech.com",
+            modelURL: config.modelURL ||"http://www.github.com/jfont555/satip_proxy_tool",
             modelName: config.modelName ||"SAT>IP PROXY TEST",
             modelNumber: config.modelNumber ||"0.0.0.1",
             serialNumber: config.serialNumber ||"PCSATIP-1JFVSAT",
             UDN: "uuid:"+config.uuid,// Generate and return a RFC4122 v1 (timestamp-based)
-            presentationURL: "http://"+generalFunctions.myIP()+":"+ proxyPort
         }
     };
     var Xml1 = {
         specVersion: {
             major: 1,
-            minor: 0
+            minor: 1
         }
     };
 
     builder.ele(Xml1);
-    builder.ele(defaults).ele('satip:X_SATIPCAP', {'xmlns:satip': 'urn:ses-com:satip'}, config.satipX_SATIPCAP ||'DVBT-1,DVBS-2')
-        .up().ele('satip:X_SATIPM3U', {'xmlns:satip': 'urn:ses-com:satip'}, '/playlist/satip/channels');
+    builder.ele(defaults).ele('satip:X_SATIPCAP', {'xmlns:satip': 'urn:ses-com:satip'}, config.satipX_SATIPCAP ||'DVBT-1,DVBS-2');
     fs.writeFile(
         "./DeviceDesc.xml",
         builder,
