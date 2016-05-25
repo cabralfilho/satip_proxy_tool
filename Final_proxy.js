@@ -91,7 +91,8 @@ var ProxySatIP = function (initOptions) {
                                                 pids: regularUtils.pids(data).toString(),
                                                 session: session,
                                                 nSeq: regularUtils.SeqNum(data).toString().slice(6),
-                                                clientports: auxClientPorts.toString()
+                                                clientports: auxClientPorts.toString(),
+                                                msys: 'dvbt'
                                             };
 
                                             //logger.debug({timestamp: Date.now()}, 'ServiceSocket connect to server: ' + freqacanviar.freq[5]);
@@ -103,9 +104,13 @@ var ProxySatIP = function (initOptions) {
                                                 serviceSocket.write(setupMessDVBT);
                                             });
                                         }
-                                        else if (freqacanviar.type == "DVB-S") {//SETUP pel cas DVB-S
+                                        else if (freqacanviar.type == "DVB-S" || freqacanviar.type == "DVB-S2") {//SETUP pel cas DVB-S
                                             var auxClientPorts = "client_port=" + portsUsed[proxyClientID] + "-" + (portsUsed[proxyClientID] + 1);
-
+                                            var msysT;
+                                            if(freqacanviar.type == "DVB-S"){
+                                                msysT = 'dvbs'}else{
+                                                msysT = 'dvbs2'
+                                            }
                                             var options = {
                                                 serverAddress: serviceHost,
                                                 freq: freqacanviar.freq,
@@ -113,9 +118,11 @@ var ProxySatIP = function (initOptions) {
                                                 session: session,
                                                 nSeq: regularUtils.SeqNum(data).toString().slice(6),
                                                 clientports: auxClientPorts.toString(),
+                                                msys: regularUtils.msys(data),
                                                 fec: freqacanviar.fec,
                                                 pol: freqacanviar.pol,
-                                                sr: freqacanviar.sr
+                                                sr: freqacanviar.sr,
+                                                msys: msysT
                                             };
 
                                             logger.debug({timestamp: Date.now()}, 'ServiceSocket connect to server: ' + freqacanviar.freq[5]);
