@@ -16,9 +16,9 @@ var initializer = function(config) {
             modelDescription: config.modelDescription ||"Sat>IP proxy",
             modelURL: config.modelURL ||"http://www.github.com/jfont555/satip_proxy_tool",
             modelName: config.modelName ||"SAT>IP PROXY TEST",
-            modelNumber: config.modelNumber ||"0.0.0.1",
+            modelNumber: config.modelNumber ||"Release 18-05-16",
             serialNumber: config.serialNumber ||"PCSATIP-1JFVSAT",
-            UDN: "uuid:"+config.uuid,// Generate and return a RFC4122 v1 (timestamp-based)
+            UDN: "uuid:"+config.uuid// Generate and return a RFC4122 v1 (timestamp-based)
         }
     };
     var Xml1 = {

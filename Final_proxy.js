@@ -346,14 +346,16 @@ var ProxySatIP = function (initOptions) {
 
             serviceSocket.on("data", function (data) {
                 //canmbiem la IP i PORT dels missatges de resposta del Servidor
-                var changeipOptions = VerEx().find(proxy).replace(data, proxySocket.remoteAddress.toString());
-                changeipOptions = VerEx().find(serviceHost).replace(changeipOptions, proxy);
-                logger.debug({timestamp: Date.now()}, "Response Message from server (Only change IP):" + changeipOptions.toString());
-                if (initOptions.verbose) {
-                    console.log("Response Message from server (Only change IP):\n" + changeipOptions.toString());
-                }
+                if(proxySocket.getRemoteAddress !== null || proxySocket.getRemoteAddress !== undefined) {
+                    var changeipOptions = VerEx().find(proxy).replace(data, proxySocket.remoteAddress.toString());
+                    changeipOptions = VerEx().find(serviceHost).replace(changeipOptions, proxy);
+                    logger.debug({timestamp: Date.now()}, "Response Message from server (Only change IP):" + changeipOptions.toString());
+                    if (initOptions.verbose) {
+                        console.log("Response Message from server (Only change IP):\n" + changeipOptions.toString());
+                    }
 
-                proxySocket.write(changeipOptions);
+                    proxySocket.write(changeipOptions);
+                }
             });
 
 
