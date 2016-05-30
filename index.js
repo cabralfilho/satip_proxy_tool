@@ -13,72 +13,72 @@ var GeneralFunctions = require('./general_functions.js');
 var options = stdio.getopt({
     'config': {
         key: 'c',
-        description: 'Arxiu configuració SSDP',
+        description: 'SSDP config file',
         args: 1
     },
     'path': {
         key: 'p',
-        description: "Path arxiu configuració",
+        description: "Path configuration file",
         args: 1
     },
     'deviceType': {
         key: 'd',
-        description: 'Especificar deviceType al XML',
+        description: 'Set deviceType in XML',
         args: 1
     },
     'friendlyName': {
         key: 'n',
-        description: 'Especificar friendlyName al XML',
+        description: 'Set friendlyName in XML',
         args: 1
     },
     'manufacturer': {
         key: 'm',
-        description: 'Especificar manufacturer al XML',
+        description: 'Set manufacturer in XML',
         args: 1
     },
     'manufacturerURL': {
         key: 'U',
-        description: 'Especificar manufacturerURL al XML',
+        description: 'Set manufacturerURL in XML',
         args: 1
     },
     'modelDescription': {
         key: 'r',
-        description: 'Especificar modelDescription al XML',
+        description: 'Set modelDescription in XML',
         args: 1
     },
     'modelURL': {
         key: 'u',
-        description: 'Especificar modelURL al XML',
+        description: 'Set modelURL in XML',
         args: 1
     },
     'modelName': {
         key: 'q',
-        description: 'Especificar modelName al XML',
+        description: 'Set modelName in XML',
         args: 1
     },
     'udn': {
         key: 'v',
-        description: 'Especificar udn al XML',
+        description: 'Set udn in XML',
         args: 1
     },
     'modelNumber': {
         key: 'b',
-        description: 'Especificar modelNumber al XML',
+        description: 'Set modelNumber in XML',
         args: 1
     },
     'serialNumber': {
         key: 's',
-        description: 'Especificar serialNumber al XML',
+        description: 'Set serialNumber in XML',
         args: 1
     },
     'UPC': {
         key: 't',
-        description: 'Especificar UPC al XML',
+        description: 'Set UPC in XML',
         args: 1
     },
     'satipX_SATIPCAP': {
         key: 'x',
-        description: 'Especificar satipX_SATIPCAP al XML',
+        description: 'Set satipX_SATIPCAP in XML',
         args: 1
     },
     'verbose': {
