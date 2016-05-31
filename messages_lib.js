@@ -19,7 +19,10 @@ exports.optionsMessage = function(options,cb){
 exports.setupMessageDVBT = function(options,cb){
 
     var msgOut = new String();
-    msgOut += "SETUP rtsp://"+options.serverAddress+":554/?freq="+options.freq+"&msys="+options.msys+"&bw=8&";
+    msgOut += "SETUP rtsp://"+options.serverAddress+":554/?freq="+options.freq;
+    if(options.source !== undefined){
+        msgOut += options.source;}
+    msgOut += "&msys="+options.msys+"&bw=8&";
     if(options.pids !== null && options.pids !== undefined) {
         msgOut += options.pids;
     }else{
@@ -39,10 +42,15 @@ exports.setupMessageDVBT = function(options,cb){
 exports.playMessageDVBT = function(options,cb){
 
     var msgOut = new String();
-    msgOut += "PLAY rtsp://"+options.serverAddress+":554/"+options.stream+"?"+options.freq;
+    msgOut += "PLAY rtsp://"+options.serverAddress+":554/"+options.stream+"?freq="+options.freq;
     if(options.source !== undefined){
-    msgOut += options.source;}
-    msgOut += "&"+"&msys=dvbt&bw=6&"+options.pids;
+    msgOut += "&"+options.source;}
+    msgOut += "&msys=dvbt&bw=6";
+    if(options.pids !== null && options.pids !== undefined){
+        msgOut += "&"+options.pids;
+    }else{
+        msgOut += "&pids=0";
+    }
     msgOut += " RTSP/1.0\r\n";
 
     msgOut += "CSeq: "+options.nSeq+"\r\n";
@@ -67,6 +75,8 @@ exports.setupMessageDVBS = function(options,cb){
 
     var msgOut = new String();
     msgOut += "SETUP rtsp://"+options.serverAddress+":554/?src=1&freq="+options.freq;
+    if(options.source !== undefined){
+        msgOut += options.source;}
     msgOut += "&msys="+options.msys;
     msgOut += "&plts=off&fec="+options.fec+"&pol="+options.pol+"&ro=0.35&sr="+options.sr+"&mtype=&";
     if(options.pids !== null && options.pids !== undefined) {
@@ -90,7 +100,12 @@ exports.playMessageDVBS = function(options,cb){
     var msgOut = new String();
     msgOut += "PLAY rtsp://"+options.serverAddress+":554/";
     if(options.stream !== undefined){msgOut +=options.stream;}
-    msgOut +="?src=1&freq="+options.freq+"&msys=dvbs&plts=off&fec="+options.fec+"&pol="+options.pol+"&ro=0.35&sr="+options.sr+"&mtype=qpsk&"+options.pids;
+    msgOut +="?src=1&freq="+options.freq+"&msys=dvbs&plts=off&fec="+options.fec+"&pol="+options.pol+"&ro=0.35&sr="+options.sr+"&mtype=&";
+    if(options.pids !== null && options.pids !== undefined){
+        msgOut += options.pids;
+    }else{
+        msgOut += "pids=0";
+    }
     msgOut += " RTSP/1.0\r\n";
     msgOut += "CSeq: "+options.nSeq+"\r\n";
     msgOut += options.session+"\r\n";
