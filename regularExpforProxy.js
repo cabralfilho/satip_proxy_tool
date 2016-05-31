@@ -71,9 +71,21 @@ regularExp.prototype.individualPorts = function (data,cb){
 };
 
 regularExp.prototype.pids = function (data){
-    var pids = /pids=\d*(\w*\d)*/
-    var pidds = data.toString().match(pids);
-    return pidds;
+    var pids = /pids=\d*(\w*\d)*/;
+    var addpids = /addpids=all/;
+    var pidsAll = /pids=all/;
+
+    var pidsNorm = data.toString().match(pids);
+    var pidsAdd = data.toString().match(addpids);
+    var pidsAll = data.toString().match(pidsAll);
+
+    if(addpids !== null){
+        return pidsAdd;
+    }else if(pidsAll !== null){
+        return pidsAll
+    }else {
+        return pidds;
+    }
 };
 
 regularExp.prototype.afterTnr = function(data){

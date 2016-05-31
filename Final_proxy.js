@@ -63,7 +63,6 @@ var ProxySatIP = function (initOptions) {
                         if (regularUtils.Ports(data) !== null) {
 
                             mapping.toFreq(((regularUtils.Freq(data)).toString().slice(5)), function (freqCanviada) {
-
                                 if (freqCanviada !== undefined) {
                                     freqacanviar = freqCanviada;
 
@@ -88,13 +87,14 @@ var ProxySatIP = function (initOptions) {
                                             var options = {
                                                 serverAddress: serviceHost,
                                                 freq: freqacanviar.freq,
-                                                pids: regularUtils.pids(data).toString(),
                                                 session: session,
                                                 nSeq: regularUtils.SeqNum(data).toString().slice(6),
                                                 clientports: auxClientPorts.toString(),
                                                 msys: 'dvbt'
                                             };
-
+                                            if(regularUtils.pids(data) !== null){
+                                                options.pids = regularUtils.pids(data).toString();
+                                            }
                                             //logger.debug({timestamp: Date.now()}, 'ServiceSocket connect to server: ' + freqacanviar.freq[5]);
                                             messages.setupMessageDVBT(options, function (setupMessDVBT) {//FALTA reservar ports server per udp, Iniciar udp amb client
                                                 logger.debug({timestamp: Date.now()}, "SETUP MESS:" + setupMessDVBT);
@@ -114,16 +114,17 @@ var ProxySatIP = function (initOptions) {
                                             var options = {
                                                 serverAddress: serviceHost,
                                                 freq: freqacanviar.freq,
-                                                pids: regularUtils.pids(data).toString(),
                                                 session: session,
                                                 nSeq: regularUtils.SeqNum(data).toString().slice(6),
                                                 clientports: auxClientPorts.toString(),
-                                                msys: regularUtils.msys(data),
                                                 fec: freqacanviar.fec,
                                                 pol: freqacanviar.pol,
                                                 sr: freqacanviar.sr,
                                                 msys: msysT
                                             };
+                                            if(regularUtils.pids(data) !== null){
+                                                options.pids = regularUtils.pids(data).toString();
+                                            }
 
                                             logger.debug({timestamp: Date.now()}, 'ServiceSocket connect to server: ' + freqacanviar.freq[5]);
                                             messages.setupMessageDVBS(options, function (setupMessDVBS) {//FALTA reservar ports server per udp, Iniciar udp amb client
@@ -349,9 +350,9 @@ var ProxySatIP = function (initOptions) {
                 if(proxySocket.getRemoteAddress !== null || proxySocket.getRemoteAddress !== undefined) {
                     var changeipOptions = VerEx().find(proxy).replace(data, proxySocket.remoteAddress.toString());
                     changeipOptions = VerEx().find(serviceHost).replace(changeipOptions, proxy);
-                    logger.debug({timestamp: Date.now()}, "Response Message from server (Only change IP):" + changeipOptions.toString());
+                    logger.debug({timestamp: Date.now()}, "Response Message from server (Only change IP):" + changeipOptions);
                     if (initOptions.verbose) {
-                        console.log("Response Message from server (Only change IP):\n" + changeipOptions.toString());
+                        console.log("Response Message from server (Only change IP):\n" + changeipOptions);
                     }
 
                     proxySocket.write(changeipOptions);

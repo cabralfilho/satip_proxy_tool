@@ -1,9 +1,8 @@
 {
   "localproxy": {
-    "serverHost": "192.168.1.36",
     "serverPort": "555",
     "minPort": "52000",
-    "maxPort": "54100"
+    "maxPort": "52110"
   },
   "Server": {
     "externServer" : "192.168.1.99",

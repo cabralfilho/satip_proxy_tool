@@ -7,26 +7,24 @@ exports.optionsMessage = function(options,cb){
 
     var msgOut = new String();
     msgOut += "OPTIONS rtsp://"+options.serverAddress+":554/ RTSP/1.0\r\n";
-    msgOut += options.nSeq+"\r\n";
+    if(options.nSeq !== null){
+        msgOut += options.nSeq+"\r\n";
+    }
     if(options.session !== undefined && options.session !== null){
         msgOut += options.session+"\r\n";
     }
     msgOut += "\r\n";
     cb(msgOut);
 }
-exports.optionsMessage2 = function(cseq,cb){
-
-    var msgOut = new String();
-    msgOut += "RTSP/1.0 200 OK\r\n";
-    msgOut += cseq+"\r\n";
-    msgOut += "Public: OPTIONS, DESCRIBE, SETUP, TEARDOWN, PLAY\r\n";
-    msgOut += "\r\n";
-    cb(msgOut);
-}
 exports.setupMessageDVBT = function(options,cb){
 
     var msgOut = new String();
-    msgOut += "SETUP rtsp://"+options.serverAddress+":554/?freq="+options.freq+"&msys="+options.msys+"&bw=8&"+options.pids;
+    msgOut += "SETUP rtsp://"+options.serverAddress+":554/?freq="+options.freq+"&msys="+options.msys+"&bw=8&";
+    if(options.pids !== null && options.pids !== undefined) {
+        msgOut += options.pids;
+    }else{
+        msgOut += "pids=0";
+    }
     msgOut += " RTSP/1.0\r\n";
     msgOut += "CSeq: "+options.nSeq+"\r\n";
     if(options.session !== undefined){
@@ -70,7 +68,12 @@ exports.setupMessageDVBS = function(options,cb){
     var msgOut = new String();
     msgOut += "SETUP rtsp://"+options.serverAddress+":554/?src=1&freq="+options.freq;
     msgOut += "&msys="+options.msys;
-    msgOut += "&plts=off&fec="+options.fec+"&pol="+options.pol+"&ro=0.35&sr="+options.sr+"&mtype=&"+options.pids;
+    msgOut += "&plts=off&fec="+options.fec+"&pol="+options.pol+"&ro=0.35&sr="+options.sr+"&mtype=&";
+    if(options.pids !== null && options.pids !== undefined) {
+        msgOut += options.pids;
+    }else{
+        msgOut += "pids=0";
+    }
     msgOut += " RTSP/1.0\r\n";
     msgOut += "CSeq: "+options.nSeq+"\r\n";
     if(options.session !== undefined){

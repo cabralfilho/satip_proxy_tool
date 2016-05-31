@@ -23,5 +23,33 @@ exports.myIP = function() {
 // ############### Obtain a time based UUID ###############
 
 exports.uuidGenerator = function uuidG(cb){
-    cb(uuid.v1());
+    cb(uuid.v4());
 };
+
+
+// ############### NAT Port Forward ##################
+/*
+exports.natPortForward = function() {
+    var natpmp = require('nat-pmp');
+    var network = require('network');
+    var config = require('./config_rtsp.json');
+
+    //network.get_public_ip(function(err,ip){
+        var client = natpmp.connect('192.168.1.1');
+
+        client.externalIp(function (err,info){
+            if(err) throw err;
+            console.log('Current ecternal IP address: %s', info.ip.join('.'));
+      //  });
+
+        for(var i = config.localproxy.minPort ; i< config.localproxy.maxPort ; i++ ){
+
+            client.portMapping({type: udp, private: i, public: i, ttl: 3600}, function(err,info){
+                if(err) throw err;
+                console.log(info);
+            });
+
+        }
+
+    });
+}*/
