@@ -8,7 +8,7 @@ var ssdpDiscovery = require('./ssd-discover.js');
 var FinalProxy = require('./Final_proxy.js');
 var GeneralFunctions = require('./general_functions.js');
 var logger = require('./logger.js');
-var config = require('./config_rtsp.json')
+var config = require('./config.json')
 // ############### Initialize Proxy ###############
 
 var options = stdio.getopt({

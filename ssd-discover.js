@@ -1,7 +1,7 @@
 /**
  * Created by jordi on 30/03/15.
  */
-var config = require('./config_rtsp.json');
+var config = require('./config.json');
 
 exports.createSsdp = function(options) {
 

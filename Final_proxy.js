@@ -3,7 +3,7 @@
  */
 var net = require('net');
 var VerEx = require('verbal-expressions');
-var config = require('./config_rtsp.json');
+var config = require('./config.json');
 var udpf = require('./udp_forward');
 var logger = require('winston');
 var messages = require('./messages_lib.js');

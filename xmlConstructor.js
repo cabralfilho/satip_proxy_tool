@@ -1,6 +1,6 @@
 var generalFunctions = require('./general_functions.js');
 var fs = require('fs');
-var configuration = require('./config_rtsp.json');
+var configuration = require('./config.json');
 var builder = require('xmlbuilder').create('root');
 var logger = require('winston');
 var myIP = require('./general_functions.js');

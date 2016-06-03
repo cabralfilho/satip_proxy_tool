@@ -32,7 +32,7 @@ exports.uuidGenerator = function uuidG(cb){
 exports.natPortForward = function() {
     var natpmp = require('nat-pmp');
     var network = require('network');
-    var config = require('./config_rtsp.json');
+    var config = require('./config.json');
 
     //network.get_public_ip(function(err,ip){
         var client = natpmp.connect('192.168.1.1');

@@ -58,7 +58,9 @@ Use it like other node tools
 
 **-p --path:** Path configuration file
 
-**-V --Verbose:** Enable Verbose
+**-v --verbose:** Enable Verbose, Verbose level = verbose: 1, debug: 2. Default level is: info.
+
+**-f --Files:** Flag for save logs to file or not
 
 
 * XML parameters:
@@ -79,7 +81,7 @@ Use it like other node tools
 
 **-q --modelName:** Set modelName in XMl
 
-**-v --udn:** Set udn in XML
+**-V --udn:** Set udn in XML
 
 **-b --modelNumber:** Set modelNumber in XMl
 
@@ -88,6 +90,7 @@ Use it like other node tools
 **-t --UPC:** Set UPC in XMl
 
 **-x --satipX_SATIPCAP:** Set satipX_SATIPCAP in XMl
+
 
 * Note that XML use these default parameters if are not specified and also XML path is not provided:
 
@@ -105,16 +108,21 @@ Use it like other node tools
 
 * Configuration File:
 
-Some parameters must be specified in config_rtsp.json file:
+Some parameters must be specified in config.json file:
 
 
-    "serverPort": "555", Port that PROXY USE
-    "minPort": "52000",  PROXY RTP port range min value
-    "maxPort": "52010"   Proxy RTP port range max value
-
+    "serverRtspPort": "554",         Port that PROXY USE
+    "minPort": "52000",              PROXY RTP port range min value
+    "maxPort": "52010",              Proxy RTP port range max value
+    "serverHttpPort": "8990"         Port for HTTP server
 
     "externServer" : "192.168.1.99", SAT>IP Server IP
-    "externPort" : "554" SAT>IP Server Port
+    "externPort" : "554"             SAT>IP Server Port
+
+                                     Port rang for Proxy RTP (Not implemented yet)
+    "clientPortMin": "40200",
+    "clientPortMax": "40200"
+
 
 The most important is SAT>IP Server IP. Other parameters can be modified for user needs.
 
@@ -122,8 +130,72 @@ The most important is SAT>IP Server IP. Other parameters can be modified for use
 
     sudo node index.js [args]
 
+
 ##Examples##
 
+config.json:
+
+        "serverRtspPort": "554",
+        "minPort": "52000",
+        "maxPort": "52010",
+        "serverHttpPort": "8990"
+
+        "externServer" : "192.168.1.99",
+        "externPort" : "554"
+
+        "clientPortMin": "40200",
+        "clientPortMax": "40200"
+
+maps.json:
+
+    {"frequencies": [
+          {"from":"12727",
+            "freq": "12727",
+            "type": "DVB-S",
+            "fec": "89",
+            "pol": "h",
+            "sr": "22000"
+          },
+          {"from":"786",
+            "freq": "12727",
+            "type": "DVB-S",
+            "fec": "89",
+            "pol": "h",
+            "sr": "22000"
+            },
+          {"from":"778",
+            "freq": "12727",
+            "type": "DVB-S",
+            "fec": "89",
+            "pol": "h",
+            "sr": "22000"
+          },
+          {"from":"770",
+            "freq": "12727",
+            "type": "DVB-S",
+            "fec": "89",
+            "pol": "h",
+            "sr": "22000"
+          }
+          ]
+    }
+
+Freq: 786,778,770 MHz are mapped to 12727 MHz DVB-S
+Also freq 12727 MHz is mapped to 12727 MHZ DVB-S
+
+Turn on proxy:
+
+    sudo node index.js -v 2 -f
+
+turn on with debug verbosity and save log to file.
+
+HTTP server will run in localhost at port:8990
+
+XML file will be in: localhost:8990/DeviceDescription/DeviceDesc.xml
 
 
 ##TO-DO##
+
+* Restart proxy after crash
+* Make a script to execute like: 'proxy [args]'
+* Support for mapping DVB-C standard
