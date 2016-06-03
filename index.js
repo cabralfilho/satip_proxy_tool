@@ -7,7 +7,8 @@ var stdio = require('stdio');
 var ssdpDiscovery = require('./ssd-discover.js');
 var FinalProxy = require('./Final_proxy.js');
 var GeneralFunctions = require('./general_functions.js');
-
+var logger = require('./logger.js');
+var config = require('./config_rtsp.json')
 // ############### Initialize Proxy ###############
 
 var options = stdio.getopt({
@@ -57,7 +58,7 @@ var options = stdio.getopt({
         args: 1
     },
     'udn': {
-        key: 'v',
+        key: 'V',
         description: 'Set udn in XML',
         args: 1
     },
@@ -82,8 +83,13 @@ var options = stdio.getopt({
         args: 1
     },
     'verbose': {
-        key: 'V',
-        description: 'Enable Verbose',
+        key: 'v',
+        description: 'Enable Verbose, Verbosity level = error: 0, verbose: 1, debug: 2',
+        args: 1
+    },
+    'Files': {
+        key: 'f',
+        description: 'Flag for save logs to file or not',
         args: 0
     }
 });
@@ -93,9 +99,23 @@ GeneralFunctions.uuidGenerator( function (uuidP) {
         options.myIP = GeneralFunctions.myIP();
         options.uuid = uuidP;
 
-        xmlConstructor.initialize(options);
 
-        httpServer.iniciarHttp(options.path);
+            var loggerOptions = {
+                active: options.verbose,
+                files: options.Files
+            };
+        var log = logger.newLogger(loggerOptions);
+    console.log("\n\n");
+    log.info("Init SAT>IP RTSP-Server Proxy\n\n\n");
+
+    xmlConstructor.initialize(options);
+
+        var httpOptions = {
+            path: options.path,
+            port: config.localproxy.serverHttpPort
+        };
+
+        httpServer.iniciarHttp(httpOptions);
 
         ssdpDiscovery.createSsdp(options);
 

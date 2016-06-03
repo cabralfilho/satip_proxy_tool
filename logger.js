@@ -1,36 +1,43 @@
 /**
  * Created by jordi on 13/03/15.
  */
-var winston = require( 'winston' ),
-    fs = require( 'fs' ),
-    logDir = 'log',
-    env = process.env.NODE_ENV || 'development',
-    logger;
 
-winston.setLevels( winston.config.npm.levels );
-winston.addColors( winston.config.npm.colors );
+var logger = require( 'winston' );
+var fs = require('fs');
 
-if ( !fs.existsSync( logDir ) ) {
+var LogModule =  function(verbosity) {
+
+    if (!fs.existsSync('log')) {
 // Crear si no E
-    fs.mkdirSync( logDir );
-}
-logger = new( winston.Logger )( {
-    transports: [
-        new winston.transports.Console( {
-            level: 'warn',
-            colorize: true
-        } ),
-        new winston.transports.File( {
-            level: env === 'development' ? 'debug' : 'info',
-            filename: logDir + '/logs.log',
-            maxsize: 1024 * 1024 * 10 //10MB màx
-        } )
-    ],
-    exceptionHandlers: [
-        new winston.transports.File( {
-            filename: 'log/exceptions.log'
-        } )
-    ]
-} );
+        fs.mkdirSync('log');
+    }
+    var loggerOptions = {
+        colorize: true
+    };
 
-module.exports = logger;
+    logger.remove(logger.transports.Console);
+
+    if (verbosity.active == 1) {
+
+        loggerOptions.level = 'verbose';
+    } else if (verbosity.active == 2) {
+
+        loggerOptions.level = 'debug';
+    } else {
+    }
+    logger.add(logger.transports.Console, loggerOptions);
+
+    if (verbosity.files !== undefined) {
+        loggerOptions.filename = 'log/logFile.log'
+        logger.add(logger.transports.File, loggerOptions);
+
+        logger.handleExceptions(new logger.transports.File({filename: 'log/exceptions.log'}));
+    }
+
+    return logger;
+
+}
+
+exports.newLogger= function (Options) {
+    return new LogModule(Options);
+};

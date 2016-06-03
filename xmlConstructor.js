@@ -2,6 +2,8 @@ var generalFunctions = require('./general_functions.js');
 var fs = require('fs');
 var configuration = require('./config_rtsp.json');
 var builder = require('xmlbuilder').create('root');
+var logger = require('winston');
+var myIP = require('./general_functions.js');
 
 var initializer = function(config) {
 
@@ -21,6 +23,8 @@ var initializer = function(config) {
             UDN: "uuid:"+config.uuid// Generate and return a RFC4122 v1 (timestamp-based)
         }
     };
+
+
     var Xml1 = {
         specVersion: {
             major: 1,
@@ -29,18 +33,35 @@ var initializer = function(config) {
     };
 
     builder.ele(Xml1);
-    builder.ele(defaults).ele('satip:X_SATIPCAP', {'xmlns:satip': 'urn:ses-com:satip'}, config.satipX_SATIPCAP ||'DVBT-1,DVBS-2');
+    builder.ele(defaults).ele('satip:X_SATIPCAP', {'xmlns:satip': 'urn:ses-com:satip'}, config.satipX_SATIPCAP ||'DVBS2-1,DVBT-1');
+
+    if (!fs.existsSync('DeviceDescription')) {
+// Crear si no E
+        fs.mkdirSync('DeviceDescription');
+    }
+
     fs.writeFile(
-        "./DeviceDesc.xml",
-        builder,
+        "DeviceDescription/DeviceDesc.xml",
+        builder,{mode: '666'},
         function (error) {
             if (error) {
-                console.log(error);
+                logger.error(error);
             } else {
-                console.log("XML Created");
+                logger.debug("XML Created");
             }
         }
     );
+
+    var location = '/DeviceDescription/DeviceDesc.xml';
+
+    if(config.path !== undefined){
+        location = options.path;
+    }
+
+    logger.info("SAT>IP values of XML at: "+myIP.myIP()+":"+configuration.localproxy.serverHttpPort+location+"\n\n     deviceType: 'SatIPServer:1'\n     firendlyName: "
+    +defaults.device.friendlyName+"\n     manufacturer: "+defaults.device.manufacturer+"\n     manufacturerURL: "+defaults.device.manufacturerURL+"\n     modelDescription: "+defaults.device.modelDescription+
+    "\n     modelURL: "+defaults.device.modelURL+"\n     modelName: "+defaults.device.modelName+"\n     modelNumber: "+defaults.device.modelNumber+"\n     serialNumber: "+defaults.device.serialNumber+
+    "\n     UDN: "+defaults.device.UDN+"\n     satip:X_SATIPCAP: DVBS2-1,DVBT-1 (Default Parameter maybe not real)\n")
 }
 exports.initialize = function(options) {
     return new initializer(options);

@@ -1,11 +1,14 @@
 {
   "localproxy": {
-    "serverPort": "555",
+    "serverRtspPort": "554",
     "minPort": "52000",
-    "maxPort": "52110"
+    "maxPort": "52110",
+    "serverHttpPort": "8990"
   },
   "Server": {
     "externServer" : "192.168.1.99",
-    "externPort" : "554"
+    "externPort" : "554",
+    "clientPortMin": "40200",
+    "clientPortMax": "40200"
   }
 }

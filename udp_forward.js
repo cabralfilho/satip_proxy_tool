@@ -1,7 +1,7 @@
 /**
  * Created by jordi on 09/03/15.
  */
-var logger = require('./logger.js');
+var logger = require('winston');
 
 var UdProxy = function(toAddress, toPort, localPort) {
     this.toAddress = toAddress;
@@ -16,7 +16,7 @@ var UdProxy = function(toAddress, toPort, localPort) {
             port: this.toPort,
             localaddress: '0.0.0.0',
             localport: this.localPort,
-            timeOutTime: 20000
+            timeOutTime: 2000
         };
 // This is the function that creates the server, each connection is handled internally
     var server = proxy.createServer(options);
@@ -24,11 +24,9 @@ var UdProxy = function(toAddress, toPort, localPort) {
 
 // this should be obvious
     server.on('listening', function (details) {
-        logger.debug({timestamp: Date.now()}, 'udp-proxy-server ready on', details.server.family + '  ' + details.server.address + ':' + details.server.port);
-        logger.debug({timestamp: Date.now()}, 'traffic is forwarded to ' + details.target.family + '  ' + details.target.address + ':' + details.target.port);
+        logger.debug('udp-proxy-server ready on', details.server.family + '  ' + details.server.address + ':' + details.server.port);
+        logger.debug('traffic is forwarded to ' + details.target.family + '  ' + details.target.address + ':' + details.target.port);
 
-        //console.log('\n\nudp-proxy-server ready on ' + details.server.family + '  ' + details.server.address + ':' + details.server.port);
-        console.log('traffic is forwarded to ' + details.target.family + '  ' + details.target.address + ':' + details.target.port+"\n\n");
     });
 
 // 'bound' means the connection to server has been made and the proxying is in action
@@ -49,17 +47,17 @@ var UdProxy = function(toAddress, toPort, localPort) {
 
 // 'proxyClose' is emitted when the socket closes (from a timeout) without new messages
     server.on('proxyClose', function (peer) {
-        logger.debug({timestamp: Date.now()},'Disconnecting socket from ' + peer.address);
+        logger.debug('Disconnecting socket from ' + peer.address);
     });
 
     server.on('proxyError', function (err) {
         console.log('ProxyError! ' + err);
-        logger.debug({timestamp: Date.now()}, 'ProxyError! ' + err);
+        logger.error('ProxyError! ' + err);
     });
 
     server.on('error', function (err) {
         console.log('Error! ' + err);
-        logger.debug({timestamp: Date.now()}, 'Error! ' + err);
+        logger.error('Error! ' + err);
 
     });
 }

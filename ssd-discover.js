@@ -1,9 +1,15 @@
 /**
  * Created by jordi on 30/03/15.
  */
-var configu = require('./config_rtsp.json');
+var config = require('./config_rtsp.json');
 
 exports.createSsdp = function(options) {
+
+    var location = '/DeviceDesc.xml';
+
+    if(options.path !== undefined){
+        location = options.path;
+    }
 
     var Server = require('node-ssdp').Server
         , server = new Server({
@@ -13,7 +19,7 @@ exports.createSsdp = function(options) {
             adInterval: 20000,
             udn: options.uuid,
             ttl: 120,
-            location: 'http://'+options.myIP+':49152/DeviceDesc.xml'
+            location: 'http://'+options.myIP+':'+config.localproxy.serverHttpPort+ location
         });
 
     server.addUSN('upnp:rootdevice');
