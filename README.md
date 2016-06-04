@@ -5,11 +5,12 @@ These translations can be done:
 
 From | To
 -----|----
-DVB-S| DVB-T
-DVB-S2| DVB-T
-DVB-S| DVB-S
-DVB-T| DVB-S
-DVB-T| DVB-S2
+DVB-S/S2| DVB-T
+DVB-S/S2| DVB-S/S2
+DVB-T| DVB-S/S2
+DVB-T| DVB-T
+DVB-C| DVB-T
+DVB-C| DVB-S/S2
 
 All translations & parameters must be included in maps.json archive.
 
