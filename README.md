@@ -38,7 +38,7 @@ type, determine the translated type
 
 *
 
-##How to install:##
+## How to install: ##
 
 From Source:
 
@@ -50,7 +50,7 @@ Install dependencies with:
 
 Use it like other node tools
 
-##How to use it:##
+## How to use it: ##
 
 
 * Arguments:
@@ -130,9 +130,16 @@ The most important is SAT>IP Server IP. Other parameters can be modified for use
 * Usage:
 
     sudo node index.js [args]
+    
+## Motivate us!
+Feel free to star the project and/or message me about it. It is always super-exciting to see real-world people using this , and it helps us to prioritize new features and bug fixes.
+
+And if you find this useful, ensure that it is kept alive by donating:
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FVAPQNL7S9GRS)
 
 
-##Examples##
+## Examples ##
 
 config.json:
 
@@ -195,7 +202,7 @@ HTTP server will run in localhost at port:8990
 XML file will be in: localhost:8990/DeviceDescription/DeviceDesc.xml
 
 
-##TO-DO##
+## TO-DO ##
 
 * Restart proxy after crash
 * Make a script to execute like: 'proxy [args]'
